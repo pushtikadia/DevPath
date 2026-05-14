@@ -1,7 +1,7 @@
 name: Auto Label Pull Requests
 
 on:
-  pull_request:
+  pull_request_target:
     types:
       - opened
       - reopened
@@ -9,6 +9,7 @@ on:
 
 permissions:
   pull-requests: write
+  issues: write
 
 jobs:
   auto-label-prs:
@@ -17,53 +18,24 @@ jobs:
     steps:
       - name: Apply labels to PR
         uses: actions/github-script@v7
+
         with:
           script: |
             const pr = context.payload.pull_request;
             const branch = pr.head.ref;
 
-            let labels = ['gssoc-2026', 'needs review'];
+            let labels = ['gssoc-2026'];
 
-            // Difficulty Labels
-            if (branch.startsWith('level1/')) {
-              labels.push('level:beginner');
-            }
-
-            if (branch.startsWith('level2/')) {
-              labels.push('level:intermediate');
-            }
-
-            if (branch.startsWith('level3/')) {
-              labels.push('level:advanced');
-            }
-
-            if (branch.startsWith('level4/')) {
-              labels.push('level:critical');
-            }
-
-            // Type Labels
-            if (branch.includes('fix/')) {
-              labels.push('type:bug');
+            if (branch.includes('docs/')) {
+              labels.push('documentation');
             }
 
             if (branch.includes('feat/')) {
               labels.push('type:feature');
             }
 
-            if (branch.includes('docs/')) {
-              labels.push('type:docs');
-            }
-
-            if (branch.includes('refactor/')) {
-              labels.push('type:refactor');
-            }
-
-            if (branch.includes('test/')) {
-              labels.push('type:testing');
-            }
-
-            if (branch.includes('style/')) {
-              labels.push('type:design');
+            if (branch.includes('fix/')) {
+              labels.push('type:bug');
             }
 
             await github.rest.issues.addLabels({
