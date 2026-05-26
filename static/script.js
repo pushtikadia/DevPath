@@ -526,17 +526,15 @@ if (clearFiltersBtn) {
           renderResults(data.projects || [], data.message);
         })
         .catch(function () {
-
           setLoadingState(false);
-    //combine form values into an object to send to server/api
-    var payload = {
-      // Prefer the hidden input value; fall back to raw text box if hidden input is empty
-      skills: skillsHidden.value.trim() || skillsTextInput.value.trim(),
-      level: document.getElementById("level").value,
-      interest: document.getElementById("interest").value,
-      time: document.getElementById("time").value
-    };  
-  });
+          var generalErr = document.getElementById("form-error-general");
+
+          if (generalErr) {
+            generalErr.textContent = "An unexpected error occurred. Please try again.";
+          }
+        });
+    });
+  }); 
 
   // Manages the loading state of the form and results section(whats visible or not)
   function setLoadingState(isLoading) {
