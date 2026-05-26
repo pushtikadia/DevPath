@@ -879,7 +879,7 @@ if (
       fetchBtn.textContent = 'Syncing...';
 
       try {
-          const response = await fetch(`https://api.github.com/users/${username}/repos`);
+          const response = await fetch(`https://api.github.com/users/${username}/repos?sort=stars&direction=desc&per_page=10`);
           if (!response.ok) throw new Error();
           
           const repos = await response.json();
