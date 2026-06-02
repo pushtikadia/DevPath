@@ -824,27 +824,52 @@ if (clearFiltersBtn) {
     title.className = "project-card-title";
     title.textContent = project.title;
 
-    // Description (truncated for visual consistency)
+    // Description wrapper — keeps text and button as separate child elements
+    // so we never use textContent (which would wipe out child nodes like the button)
     var desc = document.createElement("p");
     desc.className = "project-card-desc";
-    // Cut description to 120 chars so all cards stay the same height
-    desc.textContent = truncate(project.description, 120);
+
+    // Separate span for the description text so we can update it
+    // without touching the toggle button
+    var descText = document.createElement("span");
+    descText.className = "project-card-desc-text";
+
+    var shortText = truncate(project.description, 120);
+    var fullText  = project.description;
+    var isExpanded = false;
+
+    descText.textContent = shortText;
+    desc.appendChild(descText);
+
+    // Only add Read More button if description is actually truncated
+    if (fullText.length > 120) {
+      var readMoreBtn = document.createElement("button");
+      readMoreBtn.className = "read-more-btn";
+      readMoreBtn.textContent = "Read more";
+      // aria-expanded tells screen readers whether the content is expanded or not
+      readMoreBtn.setAttribute("aria-expanded", "false");
+
+      readMoreBtn.addEventListener("click", function () {
+        isExpanded = !isExpanded;
+        // Update only the text span — button stays in the DOM untouched
+        descText.textContent = isExpanded ? fullText : shortText;
+        readMoreBtn.textContent = isExpanded ? "Read less" : "Read more";
+        readMoreBtn.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+      });
+
+      desc.appendChild(readMoreBtn);
+    }
 
     // Tags row
     var tagsRow = document.createElement("div");
     tagsRow.className = "project-card-tags";
 
-    // Show all project skills as tags so users can see the full match
     (project.skills || []).forEach(function (skill) {
       tagsRow.appendChild(createTag(skill, "skill"));
     });
 
-    // Level tag (colour-coded via CSS class)
-    // Lowercase so it matches the CSS class names like "level beginner", "level advanced"
     var levelClass = "level " + (project.level || "").toLowerCase();
     tagsRow.appendChild(createTag(project.level, levelClass));
-
-    // Time tag
     tagsRow.appendChild(createTag("Time: " + project.time, "time"));
 
     // Footer with view-details link
@@ -854,7 +879,7 @@ if (clearFiltersBtn) {
     var link = document.createElement("a");
     link.className = "btn-details";
     link.textContent = "View Full Project";
-    link.href = "/project/" + project.id; //each project has a unique id
+    link.href = "/project/" + project.id;
 
     footer.appendChild(link);
 
@@ -1136,5 +1161,4 @@ function scrollToTop() {
 if (scrollTopBtn) {
     window.addEventListener('scroll', handleScroll);
     scrollTopBtn.addEventListener('click', scrollToTop);
-}
-}
+  }
