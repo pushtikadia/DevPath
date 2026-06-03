@@ -193,7 +193,7 @@ var errorMsg = document.getElementById('github-modal-error');
 // ============================================================
 (function initMobileNav() {
   var toggle = document.getElementById("nav-mobile-toggle"); //hamburger button
-  var menu = document.getElementById("nav-mobile-menu"); //dropdown menu 
+  var menu   = document.getElementById("nav-mobile-menu"); //dropdown menu
 
   // Nothing to do if the nav isn't on this page, just bail out
   if (!toggle || !menu) return;
@@ -217,6 +217,14 @@ var errorMsg = document.getElementById('github-modal-error');
       toggle.setAttribute("aria-expanded", "false");
     });
   });
+
+  window.addEventListener("resize", function () {
+    if (window.innerWidth >= 640) {
+      menu.classList.remove("open");
+      toggle.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+  });
 })();
 
 
@@ -227,19 +235,19 @@ if (isIndexPage) {
 
   // DOM references
   // grabbing all the elements we'll need so we're not calling getElementById over and over again throughout the code
-  var form = document.getElementById("recommend-form");
-  var submitBtn = document.getElementById("submit-btn");
-  var btnLabel = document.getElementById("btn-label"); // "get recommendations" text 
-  var btnLoading = document.getElementById("btn-loading"); // spinner icon inside the button 
-  var resultsSection = document.getElementById("results-section");
-  var resultsGrid = document.getElementById("results-grid");
-  var resultsLoadingEl = document.getElementById("results-loading"); // "Loading..." text in the results 
-  var resultsEmptyEl = document.getElementById("results-empty");
-  var emptyMessageEl = document.getElementById("empty-message");
-  var skillsHidden = document.getElementById("skills"); // the hidden input that holds skills list
-  var skillsTextInput = document.getElementById("skills-input"); //visible text box in which user types skills
-  var chipsSelectedEl = document.getElementById("skill-chips-selected"); //selected skills tags container
-  var quickPickChips = document.querySelectorAll(".skill-chip"); // predefined skills user can click
+  var form              = document.getElementById("recommend-form");
+  var submitBtn         = document.getElementById("submit-btn");
+  var btnLabel          = document.getElementById("btn-label"); // "get recommendations" text
+  var btnLoading        = document.getElementById("btn-loading"); // spinner icon inside the button
+  var resultsSection    = document.getElementById("results-section");
+  var resultsGrid       = document.getElementById("results-grid");
+  var resultsLoadingEl  = document.getElementById("results-loading"); // "Loading..." text in the results
+  var resultsEmptyEl    = document.getElementById("results-empty");
+  var emptyMessageEl    = document.getElementById("empty-message");
+  var skillsHidden      = document.getElementById("skills"); // the hidden input that holds skills list
+  var skillsTextInput   = document.getElementById("skills-input"); //visible text box in which user types skills
+  var chipsSelectedEl   = document.getElementById("skill-chips-selected"); //selected skills tags container
+  var quickPickChips    = document.querySelectorAll(".skill-chip"); // predefined skills user can click
 
   // Tracks currently selected skills to prevent duplicates
   var selectedSkills = [];
