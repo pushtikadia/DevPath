@@ -79,7 +79,7 @@ Click the **Fork** button on the GitHub repository page to create your own copy.
 Then clone it locally:
 
 ```bash
-git clone https://github.com/your-username/devpath.git
+git clone https://github.com/komalharshita/devpath.git
 cd devpath
 ```
 
@@ -114,7 +114,7 @@ Open http://127.0.0.1:5000 in your browser. You should see the DevPath homepage.
 Before starting any new work, sync your fork with the upstream repository:
 
 ```bash
-git remote add upstream https://github.com/original-owner/devpath.git
+git remote add upstream https://github.com/komalharshita/devpath.git
 git fetch upstream
 git checkout main
 git merge upstream/main
@@ -180,6 +180,7 @@ def score_single_project(project, user_skills, level, interest, time_availabilit
 - Use 2-space indentation
 - Every `<section>` must have a comment header explaining its purpose
 - All images must have an `alt` attribute
+- Use `loading="lazy"` on `<img>` tags by default; omit it only for images critical to the initial render (for example, a hero photo above the fold)
 - Use semantic elements: `<nav>`, `<section>`, `<footer>`, `<article>`
 - Keep inline styles out of templates — use CSS classes instead
 
@@ -207,6 +208,13 @@ def score_single_project(project, user_skills, level, interest, time_availabilit
 - Do not use markdown formatting inside JSON string values
 
 ---
+
+### External Links
+
+- External URLs added to `projects.json` are rendered using `target="_blank"`
+- Only include trustworthy, safe, and relevant links
+- Avoid shortened or obfuscated URLs
+- Verify that all links are accessible before submitting a PR
 
 ## Commit Message Format
 
@@ -260,6 +268,7 @@ If you add a new feature, add at least one corresponding test in `tests/test_bas
 - Your branch is up to date with the upstream `main` branch
 - Your code follows the style rules above
 - You have removed all debug `print()` statements and commented-out code
+- Update `CHANGELOG.md` for any user-facing or documentation-related changes
 
 ### Steps
 
@@ -278,50 +287,6 @@ If you add a new feature, add at least one corresponding test in `tests/test_bas
 
 ---
 
-## Pull Request Template
-
-Copy and fill in this template when opening a PR:
-
-```
-## Summary
-
-What does this PR do? One or two sentences.
-
-## Related Issue
-
-Closes #(issue number)
-
-## Type of Change
-
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Documentation update
-- [ ] Dataset addition (new project in projects.json)
-- [ ] Style / UI improvement
-- [ ] Refactor (no behaviour change)
-
-## Changes Made
-
-- List the specific files changed and what was done in each
-
-## How to Test
-
-Step-by-step instructions for a reviewer to verify the change works correctly.
-
-## Screenshots (if applicable)
-
-Add before/after screenshots for UI changes.
-
-## Checklist
-
-- [ ] All 27 existing tests pass
-- [ ] I have added tests for any new logic
-- [ ] My code follows the style guidelines in CONTRIBUTING.md
-- [ ] I have removed all debug print statements
-- [ ] I have updated the relevant documentation if needed
-```
-
----
 
 ## Picking Your First Issue
 
