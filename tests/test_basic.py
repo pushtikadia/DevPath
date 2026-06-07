@@ -21,7 +21,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from utils.data_loader import load_all_projects, find_project_by_id, clear_cache, validate_projects
 from utils.roadmap_comparer import (
     load_all_career_roadmaps,
-    find_roadmap_by_id,
     compare_roadmaps,
     clear_roadmap_cache,
 )
@@ -750,15 +749,17 @@ def test_compare_invalid_roadmap_returns_none():
     assert compare_roadmaps("nonexistent", "frontend") is None
 
 
-def test_compare_page_route(client):
+def test_compare_page_route():
     """Compare page should render successfully."""
+    client = get_client()
     response = client.get("/compare")
     assert response.status_code == 200
     assert b"Compare Learning Roadmaps" in response.data
 
 
-def test_list_roadmaps_api(client):
+def test_list_roadmaps_api():
     """API should return all career roadmaps."""
+    client = get_client()
     response = client.get("/api/roadmaps")
     assert response.status_code == 200
     data = response.get_json()
@@ -766,8 +767,9 @@ def test_list_roadmaps_api(client):
     assert len(data) >= 2
 
 
-def test_compare_api(client):
+def test_compare_api():
     """Compare API should return structured comparison data."""
+    client = get_client()
     response = client.get("/api/compare?a=react&b=angular")
     assert response.status_code == 200
     data = response.get_json()
@@ -777,20 +779,23 @@ def test_compare_api(client):
     assert "overlapping_skills" in data
 
 
-def test_compare_api_missing_params(client):
+def test_compare_api_missing_params():
     """Compare API should reject requests missing query params."""
+    client = get_client()
     response = client.get("/api/compare?a=react")
     assert response.status_code == 400
 
 
-def test_compare_api_not_found(client):
+def test_compare_api_not_found():
     """Compare API should 404 for invalid roadmap IDs."""
+    client = get_client()
     response = client.get("/api/compare?a=invalid&b=alsoinvalid")
     assert response.status_code == 404
 
 
-def test_sitemap_includes_compare(client):
+def test_sitemap_includes_compare():
     """Sitemap should include the compare page."""
+    client = get_client()
     response = client.get("/sitemap.xml")
     assert response.status_code == 200
     assert b"/compare" in response.data
