@@ -707,6 +707,7 @@ updateProfileWidgets();
     span.className = "project-tag project-tag--" + normalize(type).replace(/[^a-z0-9_-]/g, "-");
     span.textContent = text;
     return span;
+  }
 
   //takes the array of projects from the api and draws them on the page as cards
   //if array is empty it shows the "no results" message instead
