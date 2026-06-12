@@ -715,6 +715,30 @@ if (isDetailPage) {
         fallbackCopy(code); // Clipboard API not supported, use fallback method
       }
     });
+  } // end github modal handlers
+
+    /* ---- Scroll-to-top button ---- */
+      
+  var SCROLL_THRESHOLD = 300;
+  var scrollTopBtn = document.getElementById('scroll-top-btn');
+
+  function handleScroll() {
+    if (!scrollTopBtn) return;
+    if (window.pageYOffset > SCROLL_THRESHOLD) {
+      scrollTopBtn.classList.add('visible');
+    } else {
+      scrollTopBtn.classList.remove('visible');
+    }
+  }
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (scrollTopBtn) {
+    window.addEventListener('scroll', handleScroll);
+    scrollTopBtn.addEventListener('click', scrollToTop);
+  }
   }
 
   // Fallback method to copy text using a hidden textarea and execCommand (for older browsers)
