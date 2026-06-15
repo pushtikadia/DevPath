@@ -9,6 +9,116 @@
 //   - Code viewer panel (detail page)
 
 // ============================================================
+// THEME PREVIEW MODAL & TOGGLE
+// ============================================================
+document.addEventListener("DOMContentLoaded", function () {
+  // Inject the theme modal HTML
+  var modalHtml = `
+<div id="theme-preview-modal" class="theme-modal-overlay" aria-hidden="true" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; backdrop-filter:blur(4px); align-items:center; justify-content:center;">
+  <div class="theme-modal-content" role="dialog" aria-modal="true" aria-labelledby="theme-modal-title" style="background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:1.5rem; max-width:500px; width:90%; box-shadow:var(--shadow-xl);">
+    <div class="theme-modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+      <h2 id="theme-modal-title" style="font-size:1.25rem; margin:0; color:var(--text-heading);">Choose a Theme</h2>
+      <button id="close-theme-modal" class="btn-clear" aria-label="Close modal" style="background:transparent; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-light);">&times;</button>
+    </div>
+    <div class="theme-preview-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <!-- Light Theme Card -->
+      <button class="theme-preview-card" data-theme-target="light" style="background:transparent; border:2px solid var(--border); border-radius:var(--r-md); padding:1rem; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:1rem; transition:all 0.2s ease;">
+        <div class="preview-mockup" style="width:100%; background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:8px; display:flex; flex-direction:column; gap:6px;">
+          <div style="width:100%; height:12px; background:#f1f5f9; border-radius:3px;"></div>
+          <div style="width:100%; height:6px; background:#cbd5e1; border-radius:2px;"></div>
+          <div style="width:60%; height:6px; background:#cbd5e1; border-radius:2px;"></div>
+          <div style="width:100%; margin-top:4px; padding:4px 0; background:#3b82f6; border-radius:3px; color:#fff; font-size:8px; text-align:center; font-weight:bold;">Button</div>
+        </div>
+        <span class="preview-label" style="font-weight:600; color:var(--text-heading);">Light Theme</span>
+      </button>
+      
+      <!-- Dark Theme Card -->
+      <button class="theme-preview-card" data-theme-target="dark" style="background:transparent; border:2px solid var(--border); border-radius:var(--r-md); padding:1rem; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:1rem; transition:all 0.2s ease;">
+        <div class="preview-mockup" style="width:100%; background:#0f172a; border:1px solid #1e293b; border-radius:6px; padding:8px; display:flex; flex-direction:column; gap:6px;">
+          <div style="width:100%; height:12px; background:#1e293b; border-radius:3px;"></div>
+          <div style="width:100%; height:6px; background:#334155; border-radius:2px;"></div>
+          <div style="width:60%; height:6px; background:#334155; border-radius:2px;"></div>
+          <div style="width:100%; margin-top:4px; padding:4px 0; background:#60a5fa; border-radius:3px; color:#0f172a; font-size:8px; text-align:center; font-weight:bold;">Button</div>
+        </div>
+        <span class="preview-label" style="font-weight:600; color:var(--text-heading);">Dark Theme</span>
+      </button>
+    </div>
+  </div>
+</div>
+  `;
+  document.body.insertAdjacentHTML("beforeend", modalHtml);
+
+  var modal = document.getElementById("theme-preview-modal");
+  var closeBtn = document.getElementById("close-theme-modal");
+  var cards = document.querySelectorAll(".theme-preview-card");
+  var html = document.documentElement;
+
+  function syncTheme(theme) {
+    html.setAttribute("data-theme", theme);
+    try { localStorage.setItem("theme", theme); } catch (e) {}
+    
+    // Sync accessibility attributes on toggle buttons
+    var isDark = theme === "dark";
+    document.querySelectorAll(".theme-toggle").forEach(function(btn) {
+      btn.setAttribute("aria-pressed", isDark ? "true" : "false");
+      btn.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+    });
+
+    // Update active card styles
+    cards.forEach(function(card) {
+      if (card.getAttribute("data-theme-target") === theme) {
+        card.style.borderColor = "var(--accent)";
+      } else {
+        card.style.borderColor = "var(--border)";
+      }
+    });
+  }
+
+  // Set initial theme in UI
+  var activeTheme = html.getAttribute("data-theme") || localStorage.getItem("theme") || "light";
+  syncTheme(activeTheme);
+
+  // Toggle modal on theme button click
+  document.querySelectorAll(".theme-toggle").forEach(function(btn) {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      modal.style.display = "flex";
+      modal.setAttribute("aria-hidden", "false");
+    });
+  });
+
+  // Close modal
+  function closeModal() {
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+  }
+
+  closeBtn.addEventListener("click", closeModal);
+  modal.addEventListener("click", function(e) {
+    if (e.target === modal) closeModal();
+  });
+
+  // Apply theme when card is clicked
+  cards.forEach(function(card) {
+    card.addEventListener("click", function() {
+      var theme = this.getAttribute("data-theme-target");
+      syncTheme(theme);
+      setTimeout(closeModal, 150); // slight delay for visual feedback
+    });
+    card.addEventListener("mouseenter", function() {
+      if (this.getAttribute("data-theme-target") !== html.getAttribute("data-theme")) {
+        this.style.borderColor = "var(--gray-400)";
+      }
+    });
+    card.addEventListener("mouseleave", function() {
+      if (this.getAttribute("data-theme-target") !== html.getAttribute("data-theme")) {
+        this.style.borderColor = "var(--border)";
+      }
+    });
+  });
+});
+
+// ============================================================
 // Detect which page we are on
 // ============================================================
 // !! trick turns the DOM result into a simple true/false
