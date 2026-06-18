@@ -174,6 +174,21 @@ var errorMsg = document.getElementById('github-modal-error');
   var menu = document.getElementById("nav-mobile-menu");
   if (!toggle || !menu) return;
 
+  toggle.addEventListener("click", function () {
+    var isOpen = menu.classList.toggle("open");
+    toggle.classList.toggle("open", isOpen);
+    toggle.setAttribute("aria-expanded", isOpen);
+  });
+
+  document.querySelectorAll(".nav-mobile-link").forEach(function (link) {
+    link.addEventListener("click", function () {
+      menu.classList.remove("open");
+      toggle.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+    });
+  });
+})();
+
   function setOpen(isOpen) {
     menu.classList.toggle("open", isOpen);
     toggle.classList.toggle("open", isOpen);
@@ -193,7 +208,7 @@ var errorMsg = document.getElementById('github-modal-error');
   window.addEventListener("resize", function () {
     if (window.innerWidth >= 640) setOpen(false);
   });
-})();
+
 
 var STORAGE_KEY = "devpathUserProgress";
 var progress = {
@@ -1033,7 +1048,7 @@ updateProfileWidgets();
         var general = document.getElementById("form-error-general");
         if (general) general.textContent = err.message || "An unexpected error occurred. Please try again.";
       });
-  });
+  })};
 
   // ----------------------------------------------------------
   // GitHub modal
@@ -1099,7 +1114,7 @@ updateProfileWidgets();
         });
     });
   }
-})();
+;
 
 
 // ============================================================
@@ -1280,30 +1295,4 @@ updateProfileWidgets();
     window.scrollTo({ top: atBottom ? 0 : document.body.scrollHeight, behavior: "smooth" });
   });
   update();
-})();
-(function initScrollSpy() {
-  var sections = document.querySelectorAll("section[id], header[id]");
-  var navLinks = document.querySelectorAll(".nav-link, .nav-mobile-link");
-
-  if (sections.length === 0 || navLinks.length === 0) return;
-
-  var observerOptions = {
-    root: null,
-    rootMargin: "0px 0px -50% 0px",
-    threshold: 0
-  };
-
-  var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        navLinks.forEach(function(link) {
-          link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
-        });
-      }
-    });
-  }, observerOptions);
-
-  sections.forEach(function (sec) {
-    observer.observe(sec);
-  });
-})();
+})});
